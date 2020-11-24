@@ -314,6 +314,13 @@ class COCOEvaluator(DatasetEvaluator):
         self._logger.info(
             "Evaluation results for {}: \n".format(iou_type) + create_small_table(results)
         )
+        # Sean Alex metric is alpha[lambda1*AP + lambda2*AP50 + lambda2*AP75]
+        alpha = 1
+        lambda1 = 0.8
+        lambda2 = 0.1
+        sean_alex_metric = alpha * (lambda1*results["AP"] + lambda2*results["AP50"] + lambda2*results["AP75"])
+        self._logger.info("\n\nSean Alex metric: {}\n".format(sean_alex_metric))
+
         if not np.isfinite(sum(results.values())):
             self._logger.info("Some metrics cannot be computed and is shown as NaN.")
 
@@ -332,7 +339,20 @@ class COCOEvaluator(DatasetEvaluator):
             precision = precisions[:, :, idx, 0, -1]
             precision = precision[precision > -1]
             ap = np.mean(precision) if precision.size else float("nan")
+
             results_per_category.append(("{}".format(name), float(ap * 100)))
+
+            # Showing AP50 to check indexing and calculation
+            precision_50 = precisions[0, :, idx, 0, -1]
+            ap_50 = np.mean(precision_50)*100 if precision_50.size else float("nan")
+            self._logger.info("{} {} AP50: {:.3f}".format(name, iou_type, ap_50))
+
+            # Show AP80,85,90,95
+            ap_strs = [80,85,90,95]
+            for i in range(6,10):
+                precision = precisions[i, :, idx, 0, -1]
+                ap = np.mean(precision)*100 if precision.size else float("nan")
+                self._logger.info("{} {} AP{}: {:.3f}".format(name, iou_type, ap_strs[i-6], ap))
 
         # tabulate it
         N_COLS = min(6, len(results_per_category) * 2)
