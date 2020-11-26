@@ -279,6 +279,7 @@ class DefaultTrainer(TrainerBase):
         cfg = DefaultTrainer.auto_scale_workers(cfg, comm.get_world_size())
 
         # Assume these objects must be constructed in this order.
+        print(f"in default trainer, mask head = {cfg.MODEL.ROI_MASK_HEAD.NAME}")
         model = self.build_model(cfg)
         optimizer = self.build_optimizer(cfg, model)
         data_loader = self.build_train_loader(cfg)

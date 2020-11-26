@@ -36,6 +36,22 @@ class _NewEmptyTensorOp(torch.autograd.Function):
         shape = ctx.shape
         return _NewEmptyTensorOp.apply(grad, shape), None
 
+def softplusSigmoid(input):
+    """
+    Our implementation of our new nonlinear activation function.
+    SoftPlusSigmoid = ln(1+e^x)/(1+e^-x)
+    """
+    return torch.nn.SoftPlus(input) * torch.nn.Sigmoid(input)
+
+class SoftPlusSigmoid(torch.nn.Module):
+    """
+    Applies the SoftPlusSigmoid function element-wise
+    """
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, input):
+        return softplusSigmoid(input)
 
 class Conv2d(torch.nn.Conv2d):
     """

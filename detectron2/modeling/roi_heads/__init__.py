@@ -11,6 +11,9 @@ from .mask_head import (
     build_mask_head,
     BaseMaskRCNNHead,
     MaskRCNNConvUpsampleHead,
+    MaskRCNNConvUpsampleHeadActivation,
+    MaskRCNNConvUpsampleHeadLoss,
+    MaskRCNNConvUpsampleHeadBoth,
 )
 from .roi_heads import (
     ROI_HEADS_REGISTRY,
