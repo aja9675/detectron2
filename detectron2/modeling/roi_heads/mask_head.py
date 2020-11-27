@@ -115,7 +115,7 @@ def mask_rcnn_loss(pred_mask_logits: torch.Tensor, instances: List[Instances], v
     if not add_reg:
         mask_loss = F.binary_cross_entropy_with_logits(pred_mask_logits, gt_masks, reduction="mean")
     else: # add in our regularization
-        print(pred_mask_logits.shape)
+        #print(pred_mask_logits.shape)
         #mask_shape = (pred_mask_logits.shape[1], pred_mask_logits.shape[2])
         device = torch.device("cuda:0")
         # makes a stack of identical mask weights matching the pred_mask_logits tensor shape
