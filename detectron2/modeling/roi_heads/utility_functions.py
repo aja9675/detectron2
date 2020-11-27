@@ -53,7 +53,9 @@ def make_mask_weights(shape, dtype, device):
     # check shape
     # if len(shape) != 2:
         # raise ValueError(f"Mask shape ({shape}) isn't 2 dimensional")
-    n = np.fromfunction(lambda i, j: np.maximum(np.abs(i-shape[1]/2), np.abs(j-shape[2]/2)), (shape[1], shape[2]), dtype=float)
+    n = np.fromfunction(lambda i, j: np.maximum((i-shape[1]//2)**2, (j-shape[2]//2)**2), (shape[1], shape[2]), dtype=float)
+    # Normalize between 0 and 1
+    n = n / np.max(n)
     # stack em up
     n = np.tile(n, (shape[0], 1, 1))
     return torch.tensor(n, dtype=dtype, device=device)
